@@ -1,108 +1,78 @@
 <!doctype html>
 <html lang="ur" dir="rtl">
- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#10172a">
-<title>Crazy Graphix — Tasks & Rewards</title>
+<meta name="theme-color" content="#10172a"><title>Crazy Graphix — Tasks & Rewards</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--bg:#0b1020;--panel:#141d33;--panel2:#1b2945;--text:#f4f7ff;--muted:#aab6d0;--blue:#4f8cff;--cyan:#41d6d0;--line:#2b3958;--gold:#ffd166}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#0b1020,#101a31 55%,#15102b);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
-header{padding:22px 18px 16px;max-width:1050px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.brand{display:flex;align-items:center;gap:11px}.logo{width:46px;height:46px;border-radius:15px;background:linear-gradient(135deg,var(--blue),#9b5cff);display:grid;place-items:center;font-weight:900;font-size:20px;box-shadow:0 8px 24px #4f8cff44}
-h1{font-size:19px;margin:0;letter-spacing:.4px}.sub{font-size:12px;color:var(--muted);margin-top:3px}
-.pill{border:1px solid #35517e;color:#cfe0ff;padding:7px 10px;border-radius:99px;font-size:12px}
-main{max-width:1050px;margin:auto;padding:0 16px 100px}.hero{background:linear-gradient(120deg,#1b3970,#442a75);border:1px solid #4965a2;border-radius:22px;padding:22px;margin:10px 0 17px;position:relative;overflow:hidden}
-.hero:after{content:"CG";position:absolute;left:20px;bottom:-28px;font-size:110px;font-weight:900;color:#ffffff0c}
-.hero h2{font-size:23px;margin:0 0 7px}.hero p{color:#d6e1ff;margin:0;font-size:14px;max-width:570px;line-height:1.7}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:13px 0 20px}.stat,.card{background:#141d33eF;border:1px solid var(--line);border-radius:17px;padding:15px}.stat small{color:var(--muted)}.stat strong{display:block;font-size:21px;margin-top:6px}
-.section-head{display:flex;justify-content:space-between;align-items:center;margin:21px 2px 11px}.section-head h3{margin:0;font-size:17px}.muted{color:var(--muted);font-size:12px}
-.tasks{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}.task{background:linear-gradient(150deg,#172541,#131b2e);border:1px solid var(--line);border-radius:17px;padding:15px}.task h4{margin:0 0 7px;font-size:15px}.task p{margin:0 0 13px;color:var(--muted);font-size:13px;line-height:1.6}.reward{color:var(--gold);font-weight:800}.task-foot{display:flex;justify-content:space-between;align-items:center;gap:8px}
-button{border:0;border-radius:11px;padding:10px 14px;font-weight:700;cursor:pointer;background:linear-gradient(100deg,var(--blue),#7655ed);color:white}button.secondary{background:#243452;color:#dce8ff;border:1px solid #3a4c70}button:disabled{opacity:.45;cursor:not-allowed}
-.nav{position:fixed;bottom:0;left:0;right:0;background:#0d1425f2;backdrop-filter:blur(12px);border-top:1px solid var(--line);display:flex;justify-content:center;gap:4px;padding:9px 8px calc(9px + env(safe-area-inset-bottom));z-index:5}.nav button{background:transparent;color:var(--muted);font-size:12px;padding:9px 13px}.nav button.active{background:#23375e;color:#fff}
-.panel{display:none}.panel.active{display:block}.field{display:grid;gap:6px;margin:12px 0}.field label{font-size:13px;color:#d5def1}.field input,.field textarea,.field select{width:100%;border-radius:11px;border:1px solid #344665;background:#0e1729;color:white;padding:12px;font:inherit}.field textarea{min-height:85px;resize:vertical}
-.notice{background:#302a19;border:1px solid #68552b;color:#ffe5a3;padding:12px;border-radius:13px;font-size:12px;line-height:1.7;margin:12px 0}
-.row{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}.row:last-child{border:0}
-.badge{font-size:11px;border-radius:99px;padding:5px 8px;background:#263d35;color:#9af0c4}.badge.pending{background:#44391e;color:#ffdf8b}
-.empty{padding:22px;text-align:center;color:var(--muted);font-size:13px}
-dialog{border:1px solid #3b4d70;border-radius:18px;background:#121d33;color:white;width:min(92vw,480px);padding:20px}dialog::backdrop{background:#0009}dialog h3{margin-top:0}
-footer{text-align:center;color:#8290aa;font-size:11px;padding:24px 0}
-@media(max-width:620px){header{padding-top:16px}.stats{gap:7px}.stat{padding:11px}.stat strong{font-size:17px}.tasks{grid-template-columns:1fr}.hero h2{font-size:20px}.nav button{padding:9px 10px}}
-</style>
-</head>
-<body>
+:root{--bg:#0b1020;--panel:#141d33;--text:#f4f7ff;--muted:#aab6d0;--blue:#4f8cff;--line:#2b3958;--gold:#ffd166}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#0b1020,#101a31 55%,#15102b);color:var(--text);font-family:system-ui,sans-serif}
+header{padding:22px 18px 16px;max-width:1050px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{display:flex;align-items:center;gap:11px}.logo{width:46px;height:46px;border-radius:15px;background:linear-gradient(135deg,var(--blue),#9b5cff);display:grid;place-items:center;font-weight:900;font-size:20px}h1{font-size:19px;margin:0}.sub,.muted{font-size:12px;color:var(--muted)}.pill{border:1px solid #35517e;padding:7px 10px;border-radius:99px;font-size:12px}
+main{max-width:1050px;margin:auto;padding:0 16px 100px}.hero{background:linear-gradient(120deg,#1b3970,#442a75);border:1px solid #4965a2;border-radius:22px;padding:22px;margin:10px 0 17px}.hero h2{margin:0 0 7px}.hero p{color:#d6e1ff;margin:0;font-size:14px;line-height:1.7}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:13px 0 20px}.stat,.card{background:#141d33ef;border:1px solid var(--line);border-radius:17px;padding:15px}.stat strong{display:block;font-size:21px;margin-top:6px}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin:21px 2px 11px}.tasks{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}.task{background:linear-gradient(150deg,#172541,#131b2e);border:1px solid var(--line);border-radius:17px;padding:15px}.task h4{margin:0 0 7px}.task p{color:var(--muted);font-size:13px;line-height:1.6}.reward{color:var(--gold);font-weight:800}.task-foot,.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.row{padding:12px 0;border-bottom:1px solid var(--line)}
+button{border:0;border-radius:11px;padding:10px 14px;font-weight:700;cursor:pointer;background:linear-gradient(100deg,var(--blue),#7655ed);color:white}button.secondary{background:#243452;color:#dce8ff;border:1px solid #3a4c70}button:disabled{opacity:.45}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#0d1425f2;border-top:1px solid var(--line);display:flex;justify-content:center;gap:4px;padding:9px;z-index:5}.nav button{background:transparent;color:var(--muted);font-size:12px}.nav button.active{background:#23375e;color:white}
+.panel{display:none}.panel.active{display:block}.field{display:grid;gap:6px;margin:12px 0}.field input,.field textarea,.field select{width:100%;border-radius:11px;border:1px solid #344665;background:#0e1729;color:white;padding:12px;font:inherit}.field textarea{min-height:85px}
+.notice{background:#302a19;border:1px solid #68552b;color:#ffe5a3;padding:12px;border-radius:13px;font-size:12px;line-height:1.7;margin:12px 0}.empty{text-align:center;color:var(--muted);padding:22px}
+dialog{border:1px solid #3b4d70;border-radius:18px;background:#121d33;color:white;width:min(92vw,480px);padding:20px}dialog::backdrop{background:#0009}footer{text-align:center;color:#8290aa;font-size:11px;padding:24px}
+#authScreen{max-width:480px;margin:28px auto 70px;padding:0 16px}#authScreen .card{padding:22px}#authScreen .auth-actions{display:flex;gap:8px}#authScreen .auth-actions button{flex:1}#appShell[hidden],#authScreen[hidden]{display:none!important}
+@media(max-width:620px){.stats{gap:7px}.stat{padding:11px}.stat strong{font-size:17px}.tasks{grid-template-columns:1fr}.nav button{padding:9px 10px}}
+</style></head><body>
 <header><div class="brand"><div class="logo">CG</div><div><h1>CRAZY GRAPHIX</h1><div class="sub">TASKS • REWARDS • BUSINESS</div></div></div><span class="pill">FREE TO JOIN</span></header>
-<main>
-<section class="hero"><h2>کام مکمل کریں، انعام حاصل کریں</h2><p>جائز چھوٹے کام منتخب کریں، اپنی submission جمع کروائیں، اور منظوری کے بعد اپنا wallet balance دیکھیں۔</p></section>
-<div class="stats">
- <div class="stat"><small>Available Balance</small><strong id="balance">Rs 0</strong></div>
- <div class="stat"><small>Pending Review</small><strong id="pending">0</strong></div>
- <div class="stat"><small>Completed Tasks</small><strong id="completed">0</strong></div>
-</div>
-<section id="home" class="panel active">
- <div class="section-head"><h3>Available Tasks</h3><span class="muted">نمونہ ٹاسکس</span></div>
- <div class="tasks" id="taskList"></div>
- <div class="notice">یہ ابتدائی Demo ہے۔ یہاں دکھائے گئے انعامات فرضی مثالیں ہیں؛ حقیقی ادائیگی یا کمائی کی ضمانت نہیں۔</div>
-</section>
-<section id="wallet" class="panel">
- <div class="section-head"><h3>My Wallet</h3><span class="muted">رقم کا ریکارڈ</span></div>
- <div class="card"><div class="muted">Available balance</div><strong style="font-size:28px" id="walletBalance">Rs 0</strong><p class="muted">صرف Admin کی منظوری کے بعد انعام balance میں شامل ہوگا۔</p><button onclick="openWithdraw()">Withdraw Request</button></div>
- <div class="section-head"><h3>Transaction History</h3></div><div class="card" id="history"><div class="empty">ابھی کوئی ٹرانزیکشن نہیں۔</div></div>
- <div class="notice">JazzCash/Easypaisa کی حقیقی ادائیگی اس Demo میں منسلک نہیں۔ Production میں مجاز merchant/payment setup اور محفوظ backend درکار ہوگا۔</div>
-</section>
-<section id="profile" class="panel">
- <div class="section-head"><h3>My Profile</h3></div><div class="card">
- <div class="field"><label>آپ کا نام</label><input id="userName" placeholder="اپنا نام لکھیں"></div>
- <div class="field"><label>ای میل یا موبائل</label><input id="userContact" placeholder="رابطے کی معلومات"></div>
- <button onclick="saveProfile()">Save Profile</button>
- </div>
- <div class="notice">اس Demo میں معلومات صرف اسی براؤزر پر محفوظ ہوتی ہیں۔ اصل اکاؤنٹ کے لیے محفوظ Login اور Database شامل کرنا ہوگا۔</div>
-</section>
-<section id="admin" class="panel">
- <div class="section-head"><h3>Admin Preview</h3><span class="muted">صرف ڈیمو</span></div>
- <div class="notice">یہ حقیقی محفوظ Admin Panel نہیں ہے۔ اسے پبلک ویب سائٹ پر Admin security کے بغیر استعمال نہ کریں۔</div>
- <div class="card"><h4>Pending submissions</h4><div id="adminList" class="empty">ابھی کوئی submission نہیں۔</div></div>
- <div class="card" style="margin-top:12px"><h4>Demo controls</h4><button class="secondary" onclick="resetDemo()">Reset demo data</button></div>
-</section>
-<footer>© Crazy Graphix — Demo version 1.0</footer>
-</main>
-<nav class="nav">
-<button class="active" data-tab="home" onclick="showTab('home',this)">⌂ Home</button>
-<button data-tab="wallet" onclick="showTab('wallet',this)">▣ Wallet</button>
-<button data-tab="profile" onclick="showTab('profile',this)">♙ Profile</button>
-<button data-tab="admin" onclick="showTab('admin',this)">⚙ Admin</button>
-</nav>
+<section id="authScreen"><div class="card"><h2>Crazy Graphix Account</h2><p class="muted">اپنا اکاؤنٹ بنائیں یا Login کریں۔</p><p id="authMessage" class="notice">Email اور کم از کم 6 حروف کا Password درج کریں۔</p>
+<div class="field"><label>Email Address</label><input id="authEmail" type="email" autocomplete="email" placeholder="اپنی ای میل لکھیں"></div>
+<div class="field"><label>Password</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="کم از کم 6 حروف" minlength="6"></div>
+<div class="auth-actions"><button onclick="signUpUser()">Sign Up</button><button class="secondary" onclick="loginUser()">Login</button></div>
+<p class="muted">اکاؤنٹ بنانے کے بعد Email confirmation مانگی جا سکتی ہے۔</p></div></section>
+<div id="appShell" hidden><main>
+<div class="row"><span class="muted" id="signedInAs"></span><button class="secondary" onclick="logoutUser()">Logout</button></div>
+<section class="hero"><h2>کام مکمل کریں، انعام حاصل کریں</h2><p>جائز چھوٹے کام منتخب کریں، submission جمع کروائیں، اور منظوری کے بعد اپنا wallet balance دیکھیں۔</p></section>
+<div class="stats"><div class="stat"><small>Available Balance</small><strong id="balance">Rs 0</strong></div><div class="stat"><small>Pending Review</small><strong id="pending">0</strong></div><div class="stat"><small>Completed Tasks</small><strong id="completed">0</strong></div></div>
+<section id="home" class="panel active"><div class="section-head"><h3>Available Tasks</h3><span class="muted">نمونہ ٹاسکس</span></div><div class="tasks" id="taskList"></div><div class="notice">یہ Demo ہے۔ انعام فرضی مثال ہے؛ حقیقی ادائیگی یا کمائی کی ضمانت نہیں۔</div></section>
+<section id="wallet" class="panel"><div class="section-head"><h3>My Wallet</h3></div><div class="card"><div class="muted">Available balance</div><strong style="font-size:28px" id="walletBalance">Rs 0</strong><p class="muted">Demo balance صرف مقامی طور پر محفوظ ہے۔</p><button onclick="openWithdraw()">Withdraw Request</button></div><div class="section-head"><h3>Transaction History</h3></div><div class="card" id="history"><div class="empty">ابھی کوئی ٹرانزیکشن نہیں۔</div></div><div class="notice">JazzCash/Easypaisa کی حقیقی ادائیگی منسلک نہیں؛ رقم منتقل نہیں ہوتی۔</div></section>
+<section id="profile" class="panel"><div class="section-head"><h3>My Profile</h3></div><div class="card"><div class="field"><label>آپ کا نام</label><input id="userName" placeholder="اپنا نام لکھیں"></div><div class="field"><label>ای میل یا موبائل</label><input id="userContact" placeholder="رابطے کی معلومات"></div><button onclick="saveProfile()">Save Profile</button></div><div class="notice">Profile صرف اسی براؤزر میں Demo کے طور پر محفوظ ہے۔</div></section>
+<section id="admin" class="panel"><div class="section-head"><h3>Admin Preview</h3></div><div class="notice">یہ محفوظ Admin Panel نہیں، صرف Demo ہے۔ یہاں کی منظوری حقیقی ادائیگی نہیں کرتی۔</div><div class="card"><h4>Pending submissions</h4><div id="adminList" class="empty">ابھی کوئی submission نہیں۔</div></div><div class="card" style="margin-top:12px"><h4>Demo controls</h4><button class="secondary" onclick="resetDemo()">Reset demo data</button></div></section>
+<footer>© Crazy Graphix — Demo version 1.1</footer></main>
+<nav class="nav"><button class="active" onclick="showTab('home',this)">⌂ Home</button><button onclick="showTab('wallet',this)">▣ Wallet</button><button onclick="showTab('profile',this)">♙ Profile</button><button onclick="showTab('admin',this)">⚙ Admin</button></nav></div>
 <dialog id="submitDialog"><h3 id="dialogTitle">Submit Task</h3><p class="muted" id="dialogDesc"></p><div class="field"><label>کام کا ثبوت / تفصیل</label><textarea id="proof" placeholder="اپنے مکمل کیے گئے کام کی تفصیل لکھیں (Demo)"></textarea></div><button onclick="sendSubmission()">Submit for review</button> <button class="secondary" onclick="closeDialog()">Cancel</button></dialog>
 <dialog id="withdrawDialog"><h3>Withdraw Request</h3><p class="muted">Demo میں صرف درخواست محفوظ ہوگی، رقم منتقل نہیں ہوگی۔</p><div class="field"><label>ادائیگی کا طریقہ</label><select id="method"><option>JazzCash</option><option>Easypaisa</option></select></div><div class="field"><label>اکاؤنٹ نمبر</label><input id="account" placeholder="03XXXXXXXXX"></div><div class="field"><label>رقم (روپے)</label><input id="amount" type="number" min="1" placeholder="مثلاً 500"></div><button onclick="requestWithdraw()">درخواست جمع کریں</button> <button class="secondary" onclick="document.getElementById('withdrawDialog').close()">Cancel</button></dialog>
 <script>
+const SUPABASE_URL = "https://zsrlwdheyevejfrqlfbk.supabase.co";
+const SUPABASE_KEY = "sb_publishable_lVb2AV1XllXR3kFjWW4EWg_0jSdA76p";
+let supabaseClient=null,currentUser=null,selected=null;
 const tasks=[
 {id:1,title:"Poster Design Brief",desc:"ایک فرضی کاروباری پوسٹر کے لیے 3 مختصر tagline تجاویز لکھیں۔",reward:50},
 {id:2,title:"Product Description",desc:"کسی عام اسٹیشنری آئٹم کی 60 الفاظ کی واضح تفصیل لکھیں۔",reward:40},
 {id:3,title:"Logo Idea",desc:"ایک فرضی بیکری کے لیے لوگو کا تخلیقی تصور بیان کریں۔",reward:75},
 {id:4,title:"Data Entry Sample",desc:"پانچ فرضی مصنوعات کے نام اور قیمتیں ایک فہرست میں لکھیں۔",reward:30}
 ];
-let data=JSON.parse(localStorage.getItem("cg_demo")||'{"balance":0,"submissions":[],"history":[],"profile":{}}'), selected=null;
-const save=()=>localStorage.setItem("cg_demo",JSON.stringify(data));
-function money(n){return "Rs "+Number(n).toLocaleString("en-PK")}
+let data={balance:0,submissions:[],history:[],profile:{}};
+const storageKey=()=>"cg_demo_"+(currentUser?.id||"guest"),save=()=>localStorage.setItem(storageKey(),JSON.stringify(data));
+function loadDemoData(){try{data=JSON.parse(localStorage.getItem(storageKey())||'{"balance":0,"submissions":[],"history":[],"profile":{}}')}catch(e){data={balance:0,submissions:[],history:[],profile:{}}}if(!data||!Array.isArray(data.submissions)||!Array.isArray(data.history))data={balance:0,submissions:[],history:[],profile:{}}}
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function money(n){return "Rs "+Number(n||0).toLocaleString("en-PK")}
+function msg(t){document.getElementById("authMessage").textContent=t}
+function authValues(){let email=document.getElementById("authEmail").value.trim(),password=document.getElementById("authPassword").value;if(!email||!document.getElementById("authEmail").checkValidity()){msg("درست Email درج کریں۔");return null}if(password.length<6){msg("Password کم از کم 6 حروف کا ہونا چاہیے۔");return null}return{email,password}}
+async function signUpUser(){let v=authValues();if(!v)return;if(!supabaseClient){msg("Supabase کنکشن تیار نہیں۔ انٹرنیٹ چیک کریں اور صفحہ دوبارہ کھولیں۔");return}msg("اکاؤنٹ بنایا جا رہا ہے...");let{data:r,error}=await supabaseClient.auth.signUp({email:v.email,password:v.password});if(error){msg("مسئلہ: "+error.message);return}if(r.session)await enterApp(r.session.user);else msg("اکاؤنٹ بنانے کی درخواست مکمل ہوگئی۔ اپنی Email میں confirmation link کھولیں، پھر Login کریں۔")}
+async function loginUser(){let v=authValues();if(!v)return;msg("Login ہو رہا ہے...");let{data:r,error}=await supabaseClient.auth.signInWithPassword({email:v.email,password:v.password});if(error){msg("Login نہیں ہوا: "+error.message);return}await enterApp(r.user)}
+async function logoutUser(){let{error}=await supabaseClient.auth.signOut();if(error){alert(error.message);return}currentUser=null;document.getElementById("appShell").hidden=true;document.getElementById("authScreen").hidden=false;msg("آپ Logout ہو گئے ہیں۔")}
+async function enterApp(user){currentUser=user;loadDemoData();document.getElementById("authScreen").hidden=true;document.getElementById("appShell").hidden=false;document.getElementById("signedInAs").textContent="Login: "+(user.email||"User");render()}
 function render(){
- document.getElementById("balance").textContent=money(data.balance);
- document.getElementById("walletBalance").textContent=money(data.balance);
- document.getElementById("pending").textContent=data.submissions.filter(x=>x.status==="Pending").length;
- document.getElementById("completed").textContent=data.submissions.filter(x=>x.status==="Approved").length;
- document.getElementById("taskList").innerHTML=tasks.map(t=>{let done=data.submissions.some(s=>s.taskId===t.id);return `<article class="task"><h4>${t.title}</h4><p>${t.desc}</p><div class="task-foot"><span class="reward">${money(t.reward)}</span><button ${done?"disabled":""} onclick="startTask(${t.id})">${done?"Submitted":"Start Task"}</button></div></article>`}).join("");
- document.getElementById("history").innerHTML=data.history.length?data.history.slice().reverse().map(h=>`<div class="row"><span>${h.label}<br><small class="muted">${h.date}</small></span><b>${h.amount>=0?"+":""}${money(h.amount)}</b></div>`).join(""):'<div class="empty">ابھی کوئی ٹرانزیکشن نہیں۔</div>';
- document.getElementById("adminList").innerHTML=data.submissions.filter(s=>s.status==="Pending").map(s=>`<div class="row"><span><b>${s.title}</b><br><small class="muted">${s.proof}</small></span><button onclick="approve(${s.id})">Approve</button></div>`).join("")||'<div class="empty">ابھی کوئی submission نہیں۔</div>';
- document.getElementById("userName").value=data.profile.name||"";document.getElementById("userContact").value=data.profile.contact||"";
+document.getElementById("balance").textContent=money(data.balance);document.getElementById("walletBalance").textContent=money(data.balance);document.getElementById("pending").textContent=data.submissions.filter(x=>x.status==="Pending").length;document.getElementById("completed").textContent=data.submissions.filter(x=>x.status==="Approved").length;
+document.getElementById("taskList").innerHTML=tasks.map(t=>{let done=data.submissions.some(s=>s.taskId===t.id);return `<article class="task"><h4>${esc(t.title)}</h4><p>${esc(t.desc)}</p><div class="task-foot"><span class="reward">${money(t.reward)}</span><button ${done?"disabled":""} onclick="startTask(${t.id})">${done?"Submitted":"Start Task"}</button></div></article>`}).join("");
+document.getElementById("history").innerHTML=data.history.length?data.history.slice().reverse().map(h=>`<div class="row"><span>${esc(h.label)}<br><small class="muted">${esc(h.date)}</small></span><b>${h.amount>=0?"+":""}${money(h.amount)}</b></div>`).join(""):'<div class="empty">ابھی کوئی ٹرانزیکشن نہیں۔</div>';
+document.getElementById("adminList").innerHTML=data.submissions.filter(s=>s.status==="Pending").map(s=>`<div class="row"><span><b>${esc(s.title)}</b><br><small class="muted">${esc(s.proof)}</small></span><button onclick="approve(${Number(s.id)})">Approve</button></div>`).join("")||'<div class="empty">ابھی کوئی submission نہیں۔</div>';
+document.getElementById("userName").value=data.profile.name||"";document.getElementById("userContact").value=data.profile.contact||"";
 }
 function showTab(id,btn){document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));btn.classList.add("active")}
-function startTask(id){selected=tasks.find(t=>t.id===id);document.getElementById("dialogTitle").textContent=selected.title;document.getElementById("dialogDesc").textContent="Demo reward: "+money(selected.reward);document.getElementById("proof").value="";document.getElementById("submitDialog").showModal()}
+function startTask(id){selected=tasks.find(t=>t.id===id);if(!selected)return;document.getElementById("dialogTitle").textContent=selected.title;document.getElementById("dialogDesc").textContent="Demo reward: "+money(selected.reward);document.getElementById("proof").value="";document.getElementById("submitDialog").showModal()}
 function closeDialog(){document.getElementById("submitDialog").close()}
-function sendSubmission(){let proof=document.getElementById("proof").value.trim();if(!proof){alert("براہ کرم کام کی تفصیل لکھیں۔");return}data.submissions.push({id:Date.now(),taskId:selected.id,title:selected.title,reward:selected.reward,proof,status:"Pending"});save();closeDialog();render();alert("Demo submission جمع ہوگئی۔ Admin Preview میں اسے approve کیا جا سکتا ہے۔")}
-function approve(id){let s=data.submissions.find(x=>x.id===id);if(!s)return;s.status="Approved";data.balance+=s.reward;data.history.push({label:"Task reward: "+s.title,amount:s.reward,date:new Date().toLocaleDateString()});save();render()}
+function sendSubmission(){if(!selected)return;let proof=document.getElementById("proof").value.trim();if(!proof){alert("براہ کرم کام کی تفصیل لکھیں۔");return}data.submissions.push({id:Date.now(),taskId:selected.id,title:selected.title,reward:selected.reward,proof,status:"Pending"});save();closeDialog();render();alert("Demo submission جمع ہوگئی۔")}
+function approve(id){let s=data.submissions.find(x=>x.id===id);if(!s||s.status!=="Pending")return;s.status="Approved";data.balance+=s.reward;data.history.push({label:"Task reward: "+s.title,amount:s.reward,date:new Date().toLocaleDateString()});save();render()}
 function openWithdraw(){document.getElementById("withdrawDialog").showModal()}
-function requestWithdraw(){let amount=Number(document.getElementById("amount").value),account=document.getElementById("account").value.trim();if(!Number.isFinite(amount)||amount<1||amount>data.balance){alert("درست رقم درج کریں جو موجودہ balance سے زیادہ نہ ہو۔");return}if(!/^03\d{9}$/.test(account)){alert("پاکستانی موبائل نمبر 03XXXXXXXXX درج کریں۔");return}data.history.push({label:"Demo withdrawal request — "+document.getElementById("method").value+" ("+account+")",amount:-amount,date:new Date().toLocaleDateString()});data.balance-=amount;save();render();document.getElementById("withdrawDialog").close();alert("Demo request محفوظ ہوگئی؛ کوئی رقم منتقل نہیں ہوئی۔")}
+function requestWithdraw(){let amount=Number(document.getElementById("amount").value),account=document.getElementById("account").value.trim();if(!Number.isFinite(amount)||amount<1||amount>data.balance){alert("درست رقم درج کریں جو موجودہ Demo balance سے زیادہ نہ ہو۔");return}if(!/^03\\d{9}$/.test(account)){alert("پاکستانی موبائل نمبر 03XXXXXXXXX درج کریں۔");return}data.history.push({label:"Demo withdrawal request — "+document.getElementById("method").value,amount:-amount,date:new Date().toLocaleDateString()});data.balance-=amount;save();render();document.getElementById("withdrawDialog").close();alert("Demo request محفوظ ہوگئی؛ کوئی رقم منتقل نہیں ہوئی۔")}
 function saveProfile(){data.profile={name:document.getElementById("userName").value.trim(),contact:document.getElementById("userContact").value.trim()};save();alert("Demo profile محفوظ ہوگئی۔")}
-function resetDemo(){if(confirm("تمام Demo data ختم کردیں؟")){localStorage.removeItem("cg_demo");location.reload()}}
-render();
-</script>
-</body></html>
+function resetDemo(){if(confirm("اس اکاؤنٹ کا تمام Demo data ختم کردیں؟")){localStorage.removeItem(storageKey());loadDemoData();render()}}
+async function init(){if(!window.supabase?.createClient){msg("Supabase library لوڈ نہیں ہوئی۔ انٹرنیٹ چیک کریں اور دوبارہ کھولیں۔");return}supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);let{data:{session},error}=await supabaseClient.auth.getSession();if(error){msg("Session چیک نہیں ہو سکا: "+error.message);return}if(session?.user)await enterApp(session.user);supabaseClient.auth.onAuthStateChange((_event,s)=>{if(s?.user)enterApp(s.user);else{currentUser=null;document.getElementById("appShell").hidden=true;document.getElementById("authScreen").hidden=false}})}
+init();
+</script></body></html>
