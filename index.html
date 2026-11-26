@@ -344,6 +344,33 @@ async function loadWithdrawals(){
 }
 
 async function requestWithdrawal(){
+async function requestWithdrawal(){
+ const rupees = Number(el("withdrawAmount").value);
+ const method = el("withdrawMethod").value;
+ const last4 = el("accountLast4").value.trim();
+
+ if(!Number.isInteger(rupees) || rupees < 100)
+   return message("کم از کم 100 روپے درج کریں۔",true);
+
+ if(!/^[0-9]{4}$/.test(last4))
+   return message("آخری 4 ہندسے درج کریں۔",true);
+
+ const {data,error} = await db.rpc("request_withdrawal",{
+   p_amount: rupees * 100,
+   p_method: method,
+   p_account_last4: last4
+ });
+
+ if(error)
+   return message("درخواست جمع نہیں ہوئی: "+error.message,true);
+
+ el("withdrawAmount").value="";
+ el("accountLast4").value="";
+
+ message("وِدڈرال ریکویسٹ کامیابی سے جمع ہو گئی۔");
+ await loadWithdrawals();
+}
+ 
  const rupees=Number(el("withdrawAmount").value);
  const method=el("withdrawMethod").value;
  const last4=el("accountLast4").value.trim();
