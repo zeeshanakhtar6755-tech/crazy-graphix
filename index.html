@@ -44,8 +44,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .stat{background:var(--panel2);padding:13px;border-radius:10px}
 .stat strong{display:block;font-size:22px;color:#8bb2ff}
-.task{background:var(--panel2);border-radius:10px;padding:13px;margin:10px 0}
-.task h3{color:#fff}
+.task{background:var(--panel2);border-radius:10px;padding:13px;margin:10px 0;overflow-wrap:anywhere}
 .tag{display:inline-block;background:#263d62;padding:3px 9px;
  border-radius:20px;font-size:12px}
 hr{border:0;border-top:1px solid #34445f;margin:15px 0}
@@ -53,6 +52,7 @@ hr{border:0;border-top:1px solid #34445f;margin:15px 0}
  padding:10px;border-radius:9px;color:#ffe1a0;font-size:13px}
 #message{position:sticky;top:0;z-index:5;padding:10px;
  text-align:center;background:#20395c;display:none}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
 footer{text-align:center;color:var(--muted);padding:25px;font-size:12px}
 @media(max-width:520px){.grid{grid-template-columns:1fr}}
 </style>
@@ -65,23 +65,21 @@ footer{text-align:center;color:var(--muted);padding:25px;font-size:12px}
  <span class="tag">FREE TO JOIN</span>
 </header>
 
-<div id="message"></div>
+<div id="message" role="status" aria-live="polite"></div>
 
 <div class="container">
 
-<!-- AUTH -->
 <section id="authSection" class="card">
  <h2>اکاؤنٹ بنائیں یا لاگ اِن کریں</h2>
- <label>ای میل</label>
- <input id="email" type="email" placeholder="اپنی ای میل لکھیں">
- <label>پاس ورڈ</label>
- <input id="password" type="password" placeholder="پاس ورڈ">
- <button onclick="signUp()">نیا اکاؤنٹ بنائیں</button>
- <button class="secondary" onclick="signIn()">لاگ اِن کریں</button>
- <p class="muted">نئے اکاؤنٹ کے بعد ای میل پر تصدیقی لنک آ سکتا ہے۔</p>
+ <label for="email">ای میل</label>
+ <input id="email" type="email" autocomplete="email" placeholder="اپنی ای میل لکھیں">
+ <label for="password">پاس ورڈ</label>
+ <input id="password" type="password" autocomplete="current-password" placeholder="پاس ورڈ">
+ <button id="signupBtn" onclick="signUp()">نیا اکاؤنٹ بنائیں</button>
+ <button id="loginBtn" class="secondary" onclick="signIn()">لاگ اِن کریں</button>
+ <p class="muted">نئے اکاؤنٹ کے بعد تصدیقی ای میل آ سکتی ہے۔</p>
 </section>
 
-<!-- APP -->
 <section id="appSection" class="hidden">
 
  <div class="card">
@@ -90,10 +88,10 @@ footer{text-align:center;color:var(--muted);padding:25px;font-size:12px}
    <button class="danger" onclick="signOut()">لاگ آؤٹ</button>
   </div>
   <p id="userEmail" class="muted"></p>
-  <label>آپ کا نام</label>
-  <input id="displayName" placeholder="اپنا نام لکھیں">
-  <label>رابطے کی معلومات (اختیاری)</label>
-  <input id="contact" placeholder="رابطے کی معلومات">
+  <label for="displayName">آپ کا نام</label>
+  <input id="displayName" maxlength="80" placeholder="اپنا نام لکھیں">
+  <label for="contact">رابطے کی معلومات (اختیاری)</label>
+  <input id="contact" maxlength="120" placeholder="رابطے کی معلومات">
   <button onclick="saveProfile()">پروفائل محفوظ کریں</button>
  </div>
 
@@ -101,7 +99,7 @@ footer{text-align:center;color:var(--muted);padding:25px;font-size:12px}
   <div class="stat">دستیاب بیلنس<strong id="balance">Rs 0</strong></div>
   <div class="stat">زیرِ جائزہ کام<strong id="pending">0</strong></div>
   <div class="stat">منظور شدہ کام<strong id="completed">0</strong></div>
-  <div class="stat">وِدڈرال ریکویسٹ<strong id="withdrawCount">0</strong></div>
+  <div class="stat">زیرِ التوا وِدڈرال<strong id="withdrawCount">0</strong></div>
  </div>
 
  <div class="card">
@@ -122,33 +120,32 @@ footer{text-align:center;color:var(--muted);padding:25px;font-size:12px}
  <div class="card">
   <h2>وِدڈرال ریکویسٹ</h2>
   <div class="notice">
-   وِدڈرال کی درخواست جمع ہونے کا مطلب خودکار رقم بھیجنا نہیں ہے۔
-   ادائیگی والدین/سرپرست کی نگرانی میں الگ سے کی جائے گی۔
-   صرف حقیقت میں ادائیگی ہونے کے بعد درخواست کو Paid کیا جائے گا۔
+   کم از کم رقم 100 روپے ہے۔ درخواست جمع ہونے کا مطلب خودکار ادائیگی نہیں۔
+   رقم صرف حقیقی ادائیگی کے بعد Paid نشان زد کی جائے گی۔
+   والدین یا سرپرست کی نگرانی ضروری ہے۔
   </div>
-  <label>رقم (روپے)</label>
-  <input id="withdrawAmount" type="number" min="100" placeholder="کم از کم 100 روپے">
-  <label>ادائیگی کا طریقہ</label>
+  <label for="withdrawAmount">رقم (روپے)</label>
+  <input id="withdrawAmount" type="number" min="100" step="1" placeholder="کم از کم 100 روپے">
+  <label for="withdrawMethod">ادائیگی کا طریقہ</label>
   <select id="withdrawMethod">
    <option value="JazzCash">JazzCash</option>
    <option value="Easypaisa">Easypaisa</option>
   </select>
-  <label>اکاؤنٹ کے آخری 4 ہندسے</label>
+  <label for="accountLast4">اکاؤنٹ کے آخری 4 ہندسے</label>
   <input id="accountLast4" inputmode="numeric" maxlength="4" placeholder="1234">
-  <p class="muted">یہاں مکمل اکاؤنٹ نمبر یا PIN نہ لکھیں۔</p>
-  <button onclick="requestWithdrawal()">ریکویسٹ جمع کروائیں</button>
+  <p class="muted">مکمل اکاؤنٹ نمبر، PIN یا OTP یہاں نہ لکھیں۔</p>
+  <button id="withdrawBtn" onclick="requestWithdrawal()">ریکویسٹ جمع کروائیں</button>
   <div id="withdrawHistory"></div>
  </div>
 
- <!-- ADMIN -->
  <section id="adminSection" class="hidden">
   <div class="card">
    <h2 class="gold">ایڈمن پینل</h2>
    <p class="muted">صرف محفوظ Admin Role والے اکاؤنٹ کو رسائی حاصل ہے۔</p>
    <h3>نیا ٹاسک شامل کریں</h3>
-   <input id="newTaskTitle" placeholder="ٹاسک کا نام">
-   <textarea id="newTaskDescription" placeholder="ٹاسک کی تفصیل"></textarea>
-   <input id="newTaskReward" type="number" min="1" placeholder="انعام روپے میں">
+   <input id="newTaskTitle" maxlength="120" placeholder="ٹاسک کا نام">
+   <textarea id="newTaskDescription" maxlength="2000" placeholder="ٹاسک کی تفصیل"></textarea>
+   <input id="newTaskReward" type="number" min="1" step="1" placeholder="انعام روپے میں">
    <button onclick="addTask()">ٹاسک شامل کریں</button>
   </div>
   <div class="card">
@@ -167,6 +164,8 @@ footer{text-align:center;color:var(--muted);padding:25px;font-size:12px}
 <footer>CRAZY GRAPHIX • Designs That Speak Loud</footer>
 
 <script>
+"use strict";
+
 const SUPABASE_URL = "https://zsrlwdheyevejfrqlfbk.supabase.co";
 const SUPABASE_KEY = "sb_publishable_lVb2AV1XllXR3kFjWW4EWg_0jSdA76p";
 
@@ -175,16 +174,19 @@ const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let currentUser = null;
 let isAdmin = false;
 let tasksCache = [];
+let appLoading = false;
+let messageTimer = null;
 
 function el(id){ return document.getElementById(id); }
 
-function message(text, bad=false){
+function message(text,bad=false){
  const box=el("message");
- box.textContent=text;
+ box.textContent=String(text);
  box.style.display="block";
  box.style.background=bad?"#762d35":"#20395c";
  window.scrollTo({top:0,behavior:"smooth"});
- setTimeout(()=>box.style.display="none",5000);
+ if(messageTimer)clearTimeout(messageTimer);
+ messageTimer=setTimeout(()=>box.style.display="none",5000);
 }
 
 function money(paisa){
@@ -197,26 +199,46 @@ function safe(value){
  }[c]));
 }
 
+function setBusy(id,busy){
+ const button=el(id);
+ if(button)button.disabled=busy;
+}
+
 async function signUp(){
  const email=el("email").value.trim();
  const password=el("password").value;
- if(!email||password.length<6) return message("درست ای میل اور کم از کم 6 حروف کا پاس ورڈ درج کریں۔",true);
- const {error}=await db.auth.signUp({email,password});
- if(error) return message(error.message,true);
- message("اکاؤنٹ کی درخواست مکمل۔ اگر تصدیقی ای میل آئے تو اسے کھولیں۔");
+ if(!email||password.length<6)
+  return message("درست ای میل اور کم از کم 6 حروف کا پاس ورڈ درج کریں۔",true);
+
+ setBusy("signupBtn",true);
+ try{
+  const {data,error}=await db.auth.signUp({email,password});
+  if(error)throw error;
+  message(data.session
+   ?"اکاؤنٹ بن گیا ہے۔ اب لاگ اِن کریں۔"
+   :"اکاؤنٹ کی درخواست مکمل۔ اپنی ای میل میں تصدیقی لنک چیک کریں۔");
+ }catch(e){message("اکاؤنٹ نہیں بنا: "+e.message,true);}
+ finally{setBusy("signupBtn",false);}
 }
 
 async function signIn(){
  const email=el("email").value.trim();
  const password=el("password").value;
- const {error}=await db.auth.signInWithPassword({email,password});
- if(error) return message(error.message,true);
- await startApp();
+ if(!email||!password)return message("ای میل اور پاس ورڈ درج کریں۔",true);
+
+ setBusy("loginBtn",true);
+ try{
+  const {error}=await db.auth.signInWithPassword({email,password});
+  if(error)throw error;
+  await startApp();
+ }catch(e){message("لاگ اِن نہیں ہوا: "+e.message,true);}
+ finally{setBusy("loginBtn",false);}
 }
 
 async function signOut(){
  await db.auth.signOut();
  currentUser=null;
+ isAdmin=false;
  el("appSection").classList.add("hidden");
  el("authSection").classList.remove("hidden");
  el("adminSection").classList.add("hidden");
@@ -224,24 +246,40 @@ async function signOut(){
 }
 
 async function startApp(){
- const {data:{user},error}=await db.auth.getUser();
- if(error||!user){
-  el("authSection").classList.remove("hidden");
-  el("appSection").classList.add("hidden");
-  return;
- }
- currentUser=user;
- isAdmin=user.app_metadata?.role==="admin";
- el("authSection").classList.add("hidden");
- el("appSection").classList.remove("hidden");
- el("userEmail").textContent=user.email||"";
- el("adminSection").classList.toggle("hidden",!isAdmin);
- await Promise.all([
-  loadProfile(),loadTasks(),loadSubmissions(),loadWallet(),loadWithdrawals()
- ]);
- if(isAdmin){
-  await loadAdminSubmissions();
-  await loadAdminWithdrawals();
+ if(appLoading)return;
+ appLoading=true;
+ try{
+  const {data:{user},error}=await db.auth.getUser();
+  if(error)throw error;
+  if(!user){
+   currentUser=null;
+   el("authSection").classList.remove("hidden");
+   el("appSection").classList.add("hidden");
+   return;
+  }
+
+  currentUser=user;
+  isAdmin=user.app_metadata?.role==="admin";
+
+  el("authSection").classList.add("hidden");
+  el("appSection").classList.remove("hidden");
+  el("userEmail").textContent=user.email||"";
+  el("adminSection").classList.toggle("hidden",!isAdmin);
+
+  await loadProfile();
+  await loadTasks();
+  await loadSubmissions();
+  await loadWallet();
+  await loadWithdrawals();
+
+  if(isAdmin){
+   await loadAdminSubmissions();
+   await loadAdminWithdrawals();
+  }
+ }catch(e){
+  message("ویب سائٹ لوڈ نہیں ہوئی: "+e.message,true);
+ }finally{
+  appLoading=false;
  }
 }
 
@@ -252,15 +290,17 @@ async function saveProfile(){
   display_name:el("displayName").value.trim(),
   contact:el("contact").value.trim()
  };
- const {error}=await db.from("profiles").upsert(record,{onConflict:"id"});
- if(error)return message("پروفائل محفوظ نہیں ہوا: "+error.message,true);
- message("پروفائل محفوظ ہو گیا۔");
+ try{
+  const {error}=await db.from("profiles").upsert(record,{onConflict:"id"});
+  if(error)throw error;
+  message("پروفائل محفوظ ہو گیا۔");
+ }catch(e){message("پروفائل محفوظ نہیں ہوا: "+e.message,true);}
 }
 
 async function loadProfile(){
  const {data,error}=await db.from("profiles")
   .select("display_name,contact").eq("id",currentUser.id).maybeSingle();
- if(error){message("پروفائل: "+error.message,true);return;}
+ if(error)throw error;
  if(data){
   el("displayName").value=data.display_name||"";
   el("contact").value=data.contact||"";
@@ -271,31 +311,48 @@ async function loadTasks(){
  const {data,error}=await db.from("tasks")
   .select("id,title,description,reward_paisa,is_active")
   .eq("is_active",true).order("created_at",{ascending:false});
- if(error){el("tasksList").textContent="ٹاسکس لوڈ نہیں ہوئے: "+error.message;return;}
+ if(error){
+  el("tasksList").textContent="ٹاسکس لوڈ نہیں ہوئے: "+error.message;
+  return;
+ }
  tasksCache=data||[];
- if(!tasksCache.length){el("tasksList").textContent="فی الحال کوئی ٹاسک موجود نہیں۔";return;}
+ if(!tasksCache.length){
+  el("tasksList").textContent="فی الحال کوئی ٹاسک موجود نہیں۔";
+  return;
+ }
  el("tasksList").innerHTML=tasksCache.map(t=>`
   <div class="task">
    <h3>${safe(t.title)}</h3>
    <p>${safe(t.description)}</p>
    <span class="tag">انعام: ${money(t.reward_paisa)}</span>
    <hr>
-   <label>اپنے کام کا ثبوت یا تفصیل</label>
-   <textarea id="proof_${safe(t.id)}" placeholder="اپنے مکمل کیے گئے کام کی تفصیل یا ثبوت کا لنک لکھیں"></textarea>
-   <button onclick="submitTask('${safe(t.id)}')">کام جمع کروائیں</button>
+   <label for="proof_${safe(t.id)}">اپنے کام کا ثبوت یا تفصیل</label>
+   <textarea id="proof_${safe(t.id)}" maxlength="3000"
+    placeholder="اپنے مکمل کیے گئے کام کی تفصیل یا ثبوت کا لنک لکھیں"></textarea>
+   <button id="submit_${safe(t.id)}" onclick="submitTask('${safe(t.id)}')">کام جمع کروائیں</button>
   </div>
  `).join("");
 }
 
 async function submitTask(taskId){
+ if(!currentUser)return;
  const proof=el("proof_"+taskId)?.value.trim();
  if(!proof)return message("کام کی تفصیل یا ثبوت درج کریں۔",true);
- const {error}=await db.from("submissions").insert({
-  user_id:currentUser.id,task_id:taskId,proof_text:proof,status:"pending"
- });
- if(error)return message("کام جمع نہیں ہوا: "+error.message,true);
- message("آپ کا کام جائزے کے لیے جمع ہو گیا ہے۔");
- await loadSubmissions();
+
+ const button=el("submit_"+taskId);
+ if(button)button.disabled=true;
+ try{
+  const {error}=await db.from("submissions").insert({
+   user_id:currentUser.id,
+   task_id:taskId,
+   proof_text:proof,
+   status:"pending"
+  });
+  if(error)throw error;
+  message("آپ کا کام جائزے کے لیے جمع ہو گیا ہے۔");
+  await loadSubmissions();
+ }catch(e){message("کام جمع نہیں ہوا: "+e.message,true);}
+ finally{if(button)button.disabled=false;}
 }
 
 async function loadSubmissions(){
@@ -303,25 +360,54 @@ async function loadSubmissions(){
   .select("id,task_id,proof_text,status,created_at")
   .eq("user_id",currentUser.id).order("created_at",{ascending:false});
  if(error){el("mySubmissions").textContent=error.message;return;}
+
  const rows=data||[];
  el("pending").textContent=rows.filter(x=>x.status==="pending").length;
  el("completed").textContent=rows.filter(x=>x.status==="approved").length;
+
  el("mySubmissions").innerHTML=rows.length?rows.map(x=>{
   const t=tasksCache.find(z=>z.id===x.task_id);
-  return `<div class="task"><b>${safe(t?.title||"ٹاسک")}</b>
-   <p>${safe(x.proof_text)}</p><span class="tag">${safe(x.status)}</span></div>`;
+  return `<div class="task">
+   <b>${safe(t?.title||"ٹاسک")}</b>
+   <p>${safe(x.proof_text)}</p>
+   <span class="tag">${safe(x.status)}</span>
+  </div>`;
  }).join(""):"ابھی کوئی کام جمع نہیں کروایا۔";
 }
 
 async function loadWallet(){
- const {data,error}=await db.from("wallet_transactions")
-  .select("amount_paisa,kind,status,created_at")
-  .eq("user_id",currentUser.id).order("created_at",{ascending:false});
- if(error){el("walletList").textContent="والٹ لوڈ نہیں ہوا: "+error.message;return;}
- const rows=data||[];
- const total=rows.filter(x=>x.status==="completed"||x.status==="paid")
+ const [walletResult,withdrawResult]=await Promise.all([
+  db.from("wallet_transactions")
+   .select("amount_paisa,kind,status,created_at")
+   .eq("user_id",currentUser.id).order("created_at",{ascending:false}),
+  db.from("withdrawal_requests")
+   .select("amount_paisa,status")
+   .eq("user_id",currentUser.id)
+ ]);
+
+ if(walletResult.error){
+  el("walletList").textContent="والٹ لوڈ نہیں ہوا: "+walletResult.error.message;
+  return;
+ }
+ if(withdrawResult.error){
+  el("walletList").textContent="وِدڈرال ریکارڈ لوڈ نہیں ہوا: "+withdrawResult.error.message;
+  return;
+ }
+
+ const rows=walletResult.data||[];
+ const requests=withdrawResult.data||[];
+
+ const ledgerTotal=rows
+  .filter(x=>x.status==="completed"||x.status==="paid")
   .reduce((sum,x)=>sum+Number(x.amount_paisa||0),0);
- el("balance").textContent=money(total);
+
+ const reserved=requests
+  .filter(x=>x.status==="pending")
+  .reduce((sum,x)=>sum+Number(x.amount_paisa||0),0);
+
+ const available=Math.max(0,ledgerTotal-reserved);
+ el("balance").textContent=money(available);
+
  el("walletList").innerHTML=rows.length?rows.map(x=>
   `<div class="task">${safe(x.kind)} — ${money(x.amount_paisa)}
    <span class="tag">${safe(x.status)}</span></div>`
@@ -332,86 +418,119 @@ async function loadWithdrawals(){
  const {data,error}=await db.from("withdrawal_requests")
   .select("method,account_last4,amount_paisa,status,created_at")
   .eq("user_id",currentUser.id).order("created_at",{ascending:false});
- if(error){el("withdrawHistory").textContent="ریکویسٹ ہسٹری: "+error.message;return;}
+
+ if(error){
+  el("withdrawHistory").textContent="ریکویسٹ ہسٹری: "+error.message;
+  return;
+ }
+
  const rows=data||[];
  el("withdrawCount").textContent=rows.filter(x=>x.status==="pending").length;
+
  el("withdrawHistory").innerHTML=rows.length?
   "<hr><h3>آپ کی ریکویسٹس</h3>"+rows.map(x=>
    `<div class="task">${safe(x.method)} — ${money(x.amount_paisa)}
    <p>اکاؤنٹ کے آخری ہندسے: ${safe(x.account_last4)}</p>
    <span class="tag">${safe(x.status)}</span></div>`
   ).join(""):"ابھی کوئی وِدڈرال ریکویسٹ نہیں۔";
+
+ await loadWallet();
 }
 
 async function requestWithdrawal(){
-async function requestWithdrawal(){
- const rupees = Number(el("withdrawAmount").value);
- const method = el("withdrawMethod").value;
- const last4 = el("accountLast4").value.trim();
+ if(!currentUser)return message("پہلے لاگ اِن کریں۔",true);
 
- if(!Number.isInteger(rupees) || rupees < 100)
-   return message("کم از کم 100 روپے درج کریں۔",true);
-
- if(!/^[0-9]{4}$/.test(last4))
-   return message("آخری 4 ہندسے درج کریں۔",true);
-
- const {data,error} = await db.rpc("request_withdrawal",{
-   p_amount: rupees * 100,
-   p_method: method,
-   p_account_last4: last4
- });
-
- if(error)
-   return message("درخواست جمع نہیں ہوئی: "+error.message,true);
-
- el("withdrawAmount").value="";
- el("accountLast4").value="";
-
- message("وِدڈرال ریکویسٹ کامیابی سے جمع ہو گئی۔");
- await loadWithdrawals();
-}
- 
  const rupees=Number(el("withdrawAmount").value);
  const method=el("withdrawMethod").value;
  const last4=el("accountLast4").value.trim();
- if(!Number.isInteger(rupees)||rupees<100)return message("کم از کم 100 روپے کی درخواست دیں۔",true);
- if(!/^[0-9]{4}$/.test(last4))return message("اکاؤنٹ کے آخری 4 ہندسے درج کریں۔",true);
- message("وِدڈرال فنکشن کے محفوظ arguments کی تصدیق درکار ہے۔ فی الحال درخواست جمع نہیں کی گئی۔",true);
+
+ if(!Number.isSafeInteger(rupees)||rupees<100)
+  return message("کم از کم 100 روپے کی درست رقم درج کریں۔",true);
+
+ if(!["JazzCash","Easypaisa"].includes(method))
+  return message("ادائیگی کا طریقہ درست منتخب کریں۔",true);
+
+ if(!/^[0-9]{4}$/.test(last4))
+  return message("اکاؤنٹ کے آخری 4 ہندسے درج کریں۔",true);
+
+ setBusy("withdrawBtn",true);
+ try{
+  const {error}=await db.rpc("request_withdrawal",{
+   p_amount:rupees*100,
+   p_method:method,
+   p_account_last4:last4
+  });
+  if(error)throw error;
+
+  el("withdrawAmount").value="";
+  el("accountLast4").value="";
+  message("وِدڈرال ریکویسٹ کامیابی سے جمع ہو گئی۔");
+  await loadWithdrawals();
+ }catch(e){
+  message("درخواست جمع نہیں ہوئی: "+e.message,true);
+ }finally{
+  setBusy("withdrawBtn",false);
+ }
 }
 
-/* Admin: only users with app_metadata.role = admin */
+/* ADMIN FUNCTIONS */
+
 async function addTask(){
  if(!isAdmin)return message("اجازت نہیں ہے۔",true);
+
  const title=el("newTaskTitle").value.trim();
  const description=el("newTaskDescription").value.trim();
  const reward=Number(el("newTaskReward").value);
- if(!title||!description||!Number.isInteger(reward)||reward<=0)
+
+ if(!title||!description||!Number.isSafeInteger(reward)||reward<=0)
   return message("ٹاسک کی تمام معلومات درست درج کریں۔",true);
- const {error}=await db.from("tasks").insert({
-  title,description,reward_paisa:reward*100,is_active:true
- });
- if(error)return message("ٹاسک شامل نہیں ہوا: "+error.message,true);
- el("newTaskTitle").value="";
- el("newTaskDescription").value="";
- el("newTaskReward").value="";
- message("نیا ٹاسک شامل ہو گیا۔");
- await loadTasks();
+
+ try{
+  const {error}=await db.from("tasks").insert({
+   title,description,reward_paisa:reward*100,is_active:true
+  });
+  if(error)throw error;
+
+  el("newTaskTitle").value="";
+  el("newTaskDescription").value="";
+  el("newTaskReward").value="";
+  message("نیا ٹاسک شامل ہو گیا۔");
+  await loadTasks();
+ }catch(e){message("ٹاسک شامل نہیں ہوا: "+e.message,true);}
 }
 
 async function loadAdminSubmissions(){
  if(!isAdmin)return;
+
  const {data,error}=await db.from("submissions")
   .select("id,user_id,task_id,proof_text,status,created_at")
   .eq("status","pending").order("created_at",{ascending:true});
- if(error){el("adminSubmissions").textContent=error.message;return;}
+
+ if(error){
+  el("adminSubmissions").textContent=error.message;
+  return;
+ }
+
  const rows=data||[];
- if(!rows.length){el("adminSubmissions").textContent="زیرِ جائزہ کوئی کام نہیں۔";return;}
+ if(!rows.length){
+  el("adminSubmissions").textContent="زیرِ جائزہ کوئی کام نہیں۔";
+  return;
+ }
+
  const userIds=[...new Set(rows.map(x=>x.user_id))];
  const taskIds=[...new Set(rows.map(x=>x.task_id))];
+
  const [profiles,tasks]=await Promise.all([
   db.from("profiles").select("id,display_name").in("id",userIds),
   db.from("tasks").select("id,title").in("id",taskIds)
  ]);
+
+ if(profiles.error||tasks.error){
+  el("adminSubmissions").textContent=
+   profiles.error?.message||tasks.error?.message;
+  return;
+ }
+
  el("adminSubmissions").innerHTML=rows.map(x=>{
   const p=(profiles.data||[]).find(z=>z.id===x.user_id);
   const t=(tasks.data||[]).find(z=>z.id===x.task_id);
@@ -427,22 +546,34 @@ async function loadAdminSubmissions(){
 
 async function reviewSubmission(id,approve){
  if(!isAdmin)return message("اجازت نہیں ہے۔",true);
- const {error}=await db.rpc("admin_review_submission",{
-  p_submission_id:id,p_approve:approve
- });
- if(error)return message("ایڈمن فنکشن کی خرابی: "+error.message,true);
- message(approve?"کام منظور ہو گیا۔":"کام رد کر دیا گیا۔");
- await loadAdminSubmissions();
- await loadSubmissions();
- await loadWallet();
+ if(!confirm(approve?"کیا یہ کام منظور کرنا ہے؟":"کیا یہ کام رد کرنا ہے؟"))return;
+
+ try{
+  const {error}=await db.rpc("admin_review_submission",{
+   p_submission_id:id,
+   p_approve:approve
+  });
+  if(error)throw error;
+
+  message(approve?"کام منظور ہو گیا۔":"کام رد کر دیا گیا۔");
+  await loadAdminSubmissions();
+  await loadSubmissions();
+  await loadWallet();
+ }catch(e){message("ایڈمن فنکشن کی خرابی: "+e.message,true);}
 }
 
 async function loadAdminWithdrawals(){
  if(!isAdmin)return;
+
  const {data,error}=await db.from("withdrawal_requests")
   .select("id,user_id,method,account_last4,amount_paisa,status,created_at")
   .eq("status","pending").order("created_at",{ascending:true});
- if(error){el("adminWithdrawals").textContent=error.message;return;}
+
+ if(error){
+  el("adminWithdrawals").textContent=error.message;
+  return;
+ }
+
  const rows=data||[];
  el("adminWithdrawals").innerHTML=rows.length?rows.map(x=>`
   <div class="task">
@@ -450,7 +581,7 @@ async function loadAdminWithdrawals(){
    <p>آخری 4 ہندسے: ${safe(x.account_last4)}</p>
    <p>رقم: ${money(x.amount_paisa)}</p>
    <span class="tag">Pending</span>
-   <p class="muted">ادائیگی باہر سے حقیقت میں بھیجنے کے بعد ہی Paid کریں۔</p>
+   <p class="muted">حقیقی ادائیگی بھیجنے کے بعد ہی Paid کریں۔</p>
    <button class="success" onclick="processWithdrawal('${safe(x.id)}',true)">ادائیگی ہو چکی ہے</button>
    <button class="danger" onclick="processWithdrawal('${safe(x.id)}',false)">رد کریں</button>
   </div>`).join(""):"کوئی زیرِ التوا درخواست نہیں۔";
@@ -459,22 +590,42 @@ async function loadAdminWithdrawals(){
 async function processWithdrawal(id,paid){
  if(!isAdmin)return message("اجازت نہیں ہے۔",true);
  if(paid&&!confirm("کیا رقم واقعی صارف کو بھیج دی گئی ہے؟"))return;
- const {error}=await db.rpc("admin_process_withdrawal",{
-  p_withdrawal_id:id,p_paid:paid
- });
- if(error)return message("وِدڈرال فنکشن کی خرابی: "+error.message,true);
- message(paid?"ریکویسٹ Paid نشان زد ہو گئی۔":"ریکویسٹ رد ہو گئی۔");
- await loadAdminWithdrawals();
+ if(!paid&&!confirm("کیا یہ درخواست رد کرنی ہے؟"))return;
+
+ try{
+  const {error}=await db.rpc("admin_process_withdrawal",{
+   p_withdrawal_id:id,
+   p_paid:paid
+  });
+  if(error)throw error;
+
+  message(paid?"ریکویسٹ Paid نشان زد ہو گئی۔":"ریکویسٹ رد ہو گئی۔");
+  await loadAdminWithdrawals();
+  await loadWallet();
+  await loadWithdrawals();
+ }catch(e){message("وِدڈرال فنکشن کی خرابی: "+e.message,true);}
 }
 
+/* AUTH SESSION */
+
 db.auth.onAuthStateChange((event,session)=>{
+ if(event==="SIGNED_OUT"){
+  currentUser=null;
+  isAdmin=false;
+  el("appSection").classList.add("hidden");
+  el("authSection").classList.remove("hidden");
+ }
  if(session?.user){
   setTimeout(()=>startApp(),0);
  }
 });
 
 (async()=>{
- const {data:{session}}=await db.auth.getSession();
+ const {data:{session},error}=await db.auth.getSession();
+ if(error){
+  message("سیشن لوڈ نہیں ہوا: "+error.message,true);
+  return;
+ }
  if(session)await startApp();
 })();
 </script>
